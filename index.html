@@ -10,7 +10,6 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#28a745">
 
-
     <style>
         * {
             margin: 0;
@@ -41,16 +40,13 @@
             margin-bottom: 20px;
         }
 
-        /* Responsive Image */
         .panel img {
             width: 100%;
             height: auto;
             border-radius: 10px;
             margin-bottom: 20px;
             max-height: 260px;
-            /* prevents overly tall image */
             object-fit: cover;
-            /* keeps it clean */
         }
 
         .btn-group {
@@ -93,8 +89,7 @@
             word-wrap: break-word;
         }
 
-        /* 📱 Mobile Optimization */
-        @media (max-width: 480px) {
+        @media (max-width:480px) {
             h2 {
                 font-size: 20px;
             }
@@ -116,21 +111,25 @@
 
     <div class="panel">
         <h2>Pickleball Court Light Control</h2>
-
         <img src="pickleball_court.jpg" alt="Pickleball Court">
-
         <div class="btn-group">
-            <!-- <button class="on" onclick="sendCmd('switchon1')">Light ON 1</button> -->
             <button class="on" onclick="sendCmd('switchon2')">Light ON</button>
-            <!-- <button class="off" onclick="sendCmd('switchoff1')">Light OFF 1</button> -->
             <button class="off" onclick="sendCmd('switchoff2')">Light OFF</button>
         </div>
-
         <div id="result"></div>
     </div>
 
     <script>
-
+        // Register service worker for offline caching
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').then(reg => {
+                    console.log('ServiceWorker registered: ', reg);
+                }).catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
 
         async function sendCmd(cmd) {
             const resultBox = document.getElementById("result");
@@ -141,15 +140,12 @@
 
             try {
                 let res = await fetch(BASE_URL + cmd);
-
                 if (!res.ok) {
                     resultBox.innerHTML = "Error: Cannot reach server";
                     return;
                 }
-
                 let data = await res.text();
                 resultBox.innerHTML = "Response: " + data;
-
             } catch (err) {
                 resultBox.innerHTML = "Failed: " + err.message;
             }
