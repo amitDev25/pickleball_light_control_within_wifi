@@ -128,7 +128,7 @@
         resultBox.style.display = "block";
         resultBox.innerHTML = "Sending request...";
 
-        const BASE_URL = "https://192.168.10.1/api/";
+        const BASE_URL = "http://192.168.10.1/api/";
 
         try {
             let res = await fetch(BASE_URL + cmd);
@@ -148,4 +148,5 @@
 </script>
 
 </body>
+
 </html>
