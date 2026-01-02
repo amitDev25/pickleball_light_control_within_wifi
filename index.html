@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pickleball Court Control Panel</title>
 
-    <style>
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#28a745">
 
-        *{
+
+    <style>
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
             font-family: Arial, sans-serif;
             background: #f2f2f2;
@@ -41,8 +47,10 @@
             height: auto;
             border-radius: 10px;
             margin-bottom: 20px;
-            max-height: 260px;      /* prevents overly tall image */
-            object-fit: cover;      /* keeps it clean */
+            max-height: 260px;
+            /* prevents overly tall image */
+            object-fit: cover;
+            /* keeps it clean */
         }
 
         .btn-group {
@@ -103,49 +111,50 @@
         }
     </style>
 </head>
+
 <body>
 
-<div class="panel">
-    <h2>Pickleball Court Light Control</h2>
+    <div class="panel">
+        <h2>Pickleball Court Light Control</h2>
 
-    <img src="pickleball_court.jpg" alt="Pickleball Court">
+        <img src="pickleball_court.jpg" alt="Pickleball Court">
 
-    <div class="btn-group">
-        <!-- <button class="on" onclick="sendCmd('switchon1')">Light ON 1</button> -->
-        <button class="on" onclick="sendCmd('switchon2')">Light ON</button>
-        <!-- <button class="off" onclick="sendCmd('switchoff1')">Light OFF 1</button> -->
-        <button class="off" onclick="sendCmd('switchoff2')">Light OFF</button>
+        <div class="btn-group">
+            <!-- <button class="on" onclick="sendCmd('switchon1')">Light ON 1</button> -->
+            <button class="on" onclick="sendCmd('switchon2')">Light ON</button>
+            <!-- <button class="off" onclick="sendCmd('switchoff1')">Light OFF 1</button> -->
+            <button class="off" onclick="sendCmd('switchoff2')">Light OFF</button>
+        </div>
+
+        <div id="result"></div>
     </div>
 
-    <div id="result"></div>
-</div>
+    <script>
 
-<script>
 
-    
-    async function sendCmd(cmd) {
-        const resultBox = document.getElementById("result");
-        resultBox.style.display = "block";
-        resultBox.innerHTML = "Sending request...";
+        async function sendCmd(cmd) {
+            const resultBox = document.getElementById("result");
+            resultBox.style.display = "block";
+            resultBox.innerHTML = "Sending request...";
 
-        const BASE_URL = "http://192.168.10.1/api/";
+            const BASE_URL = "http://192.168.10.1/api/";
 
-        try {
-            let res = await fetch(BASE_URL + cmd);
+            try {
+                let res = await fetch(BASE_URL + cmd);
 
-            if (!res.ok) {
-                resultBox.innerHTML = "Error: Cannot reach server";
-                return;
+                if (!res.ok) {
+                    resultBox.innerHTML = "Error: Cannot reach server";
+                    return;
+                }
+
+                let data = await res.text();
+                resultBox.innerHTML = "Response: " + data;
+
+            } catch (err) {
+                resultBox.innerHTML = "Failed: " + err.message;
             }
-
-            let data = await res.text();
-            resultBox.innerHTML = "Response: " + data;
-
-        } catch (err) {
-            resultBox.innerHTML = "Failed: " + err.message;
         }
-    }
-</script>
+    </script>
 
 </body>
 
